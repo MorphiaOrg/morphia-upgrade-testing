@@ -16,8 +16,8 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
 import dev.morphia.test.MorphiaContainer;
 import dev.morphia.test.TestBase;
@@ -31,13 +31,11 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -62,6 +60,7 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
+@SuppressWarnings({"deprecation", "resource", "unchecked", "unused", "DataFlowIssue"})
 public class TestLegacyQuery extends TestBase {
     private MorphiaContainer oldContainer;
 
@@ -125,7 +124,7 @@ public class TestLegacyQuery extends TestBase {
         assertEquals(query.execute(new FindOptions().limit(1)).tryNext().id, value.id);
     }
 
-    @Test(groups = { "references" })
+    @Test
     public void referenceKeys() {
         final ReferenceKey key1 = new ReferenceKey("key1");
 
@@ -266,7 +265,7 @@ public class TestLegacyQuery extends TestBase {
         getDs().save(asList(new ContainsRenamedFields("first", "last"),
                 new ContainsRenamedFields("First", "Last")));
 
-        Query query = getDs().find(ContainsRenamedFields.class)
+        Query<?> query = getDs().find(ContainsRenamedFields.class)
                 .field("last_name").equal("last");
         assertEquals(query.execute().toList().size(), 1);
         assertEquals(query.execute(new FindOptions()
@@ -393,7 +392,7 @@ public class TestLegacyQuery extends TestBase {
 
     @Test
     public void testCriteriaContainers() {
-        check(getDs().find(User.class).disableValidation());
+        check((LegacyQuery<User>) getDs().find(User.class).disableValidation());
     }
 
     @Test
@@ -914,14 +913,12 @@ public class TestLegacyQuery extends TestBase {
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
-        assertThrows(ValidationException.class, () -> {
-            getDs()
-                    .find(ContainsRenamedFields.class)
-                    .execute(new FindOptions()
-                            .projection().include("bad field name")
-                            .limit(1))
-                    .tryNext();
-        });
+        assertThrows(ValidationException.class, () -> getDs()
+                .find(ContainsRenamedFields.class)
+                .execute(new FindOptions()
+                        .projection().include("bad field name")
+                        .limit(1))
+                .tryNext());
     }
 
     @Test
@@ -985,8 +982,8 @@ public class TestLegacyQuery extends TestBase {
 
         assertEquals(query.count(), 0);
 
-        ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(
-                () -> ds.save(new CappedPic()), 0, 100, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(
+            () -> ds.save(new CappedPic()), 0, 100, TimeUnit.MILLISECONDS);
 
         Awaitility
                 .await()
@@ -1039,7 +1036,7 @@ public class TestLegacyQuery extends TestBase {
                 .tryNext());
     }
 
-    private void check(Query<User> query) {
+    private void check(LegacyQuery<User> query) {
         query
                 .field("version").equal("latest")
                 .and(
@@ -1068,11 +1065,6 @@ public class TestLegacyQuery extends TestBase {
         return copyOfRange(array, start, start + count);
     }
 
-    private void dropProfileCollection() {
-        MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
-        profileCollection.drop();
-    }
-
     private String getCommentFromProfileRecord(Document profileRecord) {
         if (profileRecord != null) {
             if (profileRecord.containsKey("command")) {
@@ -1091,18 +1083,6 @@ public class TestLegacyQuery extends TestBase {
             }
         }
         return null;
-    }
-
-    private Query<Pic> getQuery(QueryFactory queryFactory) {
-        return queryFactory.createQuery(getDs(), Pic.class);
-    }
-
-    private void turnOffProfiling() {
-        getDatabase().runCommand(new Document("profile", 0).append("slowms", 100));
-    }
-
-    private void turnOnProfiling() {
-        getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
     }
 
     @Entity(value = "legacy_capped_pic", cap = @CappedAt(count = 1000))
@@ -1135,54 +1115,6 @@ public class TestLegacyQuery extends TestBase {
         @Indexed
         private int size;
 
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(ObjectId id) {
-            this.id = id;
-        }
-
-        public PicWithObjectId getLazyObjectIdPic() {
-            return lazyObjectIdPic;
-        }
-
-        public void setLazyObjectIdPic(PicWithObjectId lazyObjectIdPic) {
-            this.lazyObjectIdPic = lazyObjectIdPic;
-        }
-
-        public Pic getLazyPic() {
-            return lazyPic;
-        }
-
-        public void setLazyPic(Pic lazyPic) {
-            this.lazyPic = lazyPic;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Pic getPic() {
-            return pic;
-        }
-
-        public void setPic(Pic pic) {
-            this.pic = pic;
-        }
-
-        public int getSize() {
-            return size;
-        }
-
-        public void setSize(int size) {
-            this.size = size;
-        }
-
         @Override
         public String toString() {
             return "ContainsPic{" +
@@ -1211,29 +1143,6 @@ public class TestLegacyQuery extends TestBase {
         }
     }
 
-    @Entity("legacy_facebook_users")
-    private static class FacebookUser {
-        @Reference
-        private final List<FacebookUser> friends = new ArrayList<>();
-        public int loginCount;
-        @Id
-        private long id;
-        private String username;
-
-        public FacebookUser(long id, String name) {
-            this();
-            this.id = id;
-            username = name;
-        }
-
-        public FacebookUser() {
-        }
-
-        public long getId() {
-            return id;
-        }
-    }
-
     @Entity
     private static class GenericKeyValue<T> {
 
@@ -1257,14 +1166,6 @@ public class TestLegacyQuery extends TestBase {
         HasIntId(int id) {
             this.id = id;
         }
-    }
-
-    @Entity
-    private static class HasPhotoReference {
-        @Id
-        private ObjectId id;
-        @Reference
-        private Photo photo;
     }
 
     @Entity
@@ -1460,38 +1361,6 @@ public class TestLegacyQuery extends TestBase {
         @Id
         private ObjectId id;
         private String name;
-    }
-
-    private static class RectangleComparator implements Comparator<Rectangle> {
-        @Override
-        public int compare(Rectangle o1, Rectangle o2) {
-            int compare = Double.compare(o1.getWidth(), o2.getWidth());
-            return compare != 0 ? compare : Double.compare(o2.getHeight(), o1.getHeight());
-        }
-    }
-
-    private static class RectangleComparator1 implements Comparator<Rectangle> {
-        @Override
-        public int compare(Rectangle o1, Rectangle o2) {
-            int compare = Double.compare(o2.getHeight(), o1.getHeight());
-            return compare != 0 ? compare : Double.compare(o2.getWidth(), o1.getWidth());
-        }
-    }
-
-    private static class RectangleComparator2 implements Comparator<Rectangle> {
-        @Override
-        public int compare(Rectangle o1, Rectangle o2) {
-            int compare = Double.compare(o1.getWidth(), o2.getWidth());
-            return compare != 0 ? compare : Double.compare(o1.getHeight(), o2.getHeight());
-        }
-    }
-
-    private static class RectangleComparator3 implements Comparator<Rectangle> {
-        @Override
-        public int compare(Rectangle o1, Rectangle o2) {
-            int compare = Double.compare(o1.getWidth(), o2.getWidth());
-            return compare != 0 ? compare : Double.compare(o1.getHeight(), o2.getHeight());
-        }
     }
 
     @Entity

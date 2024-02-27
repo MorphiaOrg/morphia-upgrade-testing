@@ -16,6 +16,8 @@
     </parent>
 
     <properties>
+        <morphia.version>2.4.12</morphia.version>
+
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,7 +45,7 @@
             <dependency>
                 <groupId>dev.morphia.morphia</groupId>
                 <artifactId>morphia-core</artifactId>
-                <version>2.4.12 </version>
+                <version>${morphia.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.testng</groupId>

@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
-git add .
-git reset --hard
-git checkout . #--quiet
+if [ -z "$SKIP_GIT" ]
+then
+  git add .
+  git reset --hard
+  git checkout . #--quiet
+fi
+
 echo building project
 mvn -q install -DskipTests
 
-echo updating projecting via openrewrite
+echo "*****  updating projecting via openrewrite"
 
 MVN_OPTS="-Dmorphia.version=3.0.0-SNAPSHOT"
 
@@ -15,6 +19,8 @@ mvn ${MVN_OPTS} -U org.openrewrite.maven:rewrite-maven-plugin:run \
   -Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30 2>&1 \
   -Drewrite.exclusions="**/*.json" \
   2>&1 | tee rewrite.out
+
+echo "*****  Rebuilding with the snapshot"
 
 mvn test  ${MVN_OPTS}
 
