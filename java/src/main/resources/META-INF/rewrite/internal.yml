@@ -1,0 +1,8 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.morphia.upgrade.InternalMigrations
+displayName: Upgrade internals to Morphia 3.0
+description: Upgrade internal references
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.DatastoreImpl
+      newFullyQualifiedTypeName: dev.morphia.MorphiaDatastore

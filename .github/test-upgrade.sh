@@ -12,13 +12,19 @@ mvn -q install -DskipTests
 
 echo "*****  updating projecting via openrewrite"
 
-MVN_OPTS="-Dmorphia.version=3.0.0-SNAPSHOT"
+MVN_OPTS="-Pmorphia30"
+
+mvn ${MVN_OPTS} -U org.openrewrite.maven:rewrite-maven-plugin:run \
+  -Drewrite.recipeArtifactCoordinates=dev.morphia.upgrading:java:1.0.0-SNAPSHOT \
+  -Drewrite.activeRecipes=dev.morphia.upgrade.InternalMigrations 2>&1 \
+  -Drewrite.exclusions="**/*.json" \
+  2>&1 | tee target/rewrite-internals.out
 
 mvn ${MVN_OPTS} -U org.openrewrite.maven:rewrite-maven-plugin:run \
   -Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:rewrite:3.0.0-SNAPSHOT \
   -Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30 2>&1 \
   -Drewrite.exclusions="**/*.json" \
-  2>&1 | tee rewrite.out
+  2>&1 | tee target/rewrite.out
 
 echo "*****  Rebuilding with the snapshot"
 
