@@ -29,3 +29,5 @@ mvn test  ${MVN_OPTS}
 
 git ls-files -m | grep "src/test"
 
+ack --nopager dev.morphia.MorphiaDatastore
+

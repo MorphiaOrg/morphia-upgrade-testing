@@ -14,7 +14,7 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
-import static dev.morphia.aggregation.stages.Out.to;
+import static dev.morphia.aggregation.stages.Out.out;
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
@@ -32,14 +32,14 @@ public class TestOut extends AggregationTest {
                 .group(group(id("author"))
                         .field("books", push()
                                 .single(field("title"))))
-                .out(to(Author.class));
+                .out(out(Author.class));
         assertEquals(getDs().getCollection(Author.class).countDocuments(), 2);
 
         getDs().aggregate(Book.class)
                 .group(group(id("author"))
                         .field("books", push()
                                 .single(field("title"))))
-                .out(to("different"));
+                .out(out("different"));
         assertEquals(getDatabase().getCollection("different").countDocuments(), 2);
     }
 
@@ -58,7 +58,7 @@ public class TestOut extends AggregationTest {
                 .match(eq("author", "Homer"))
                 .group(group(id("author"))
                         .field("copies", sum(field("copies"))))
-                .out(to("testAverage")
+                .out(out("testAverage")
                         .database("homer"));
 
         try (MongoCursor<Document> testAverage = getMongoClient()
@@ -82,7 +82,7 @@ public class TestOut extends AggregationTest {
                 .match(eq("author", "Homer"))
                 .group(group(id("author"))
                         .field("copies", sum(field("copies"))))
-                .out(to("testAverage"));
+                .out(out("testAverage"));
         try (MongoCursor<Document> testAverage = getDatabase().getCollection("testAverage").find().iterator()) {
             assertEquals(testAverage.next().get("copies"), 20);
         }
