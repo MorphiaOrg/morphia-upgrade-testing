@@ -21,11 +21,13 @@ mvn ${MVN_OPTS} -U org.openrewrite.maven:rewrite-maven-plugin:run \
   -Drewrite.exclusions="**/*.json" \
   2>&1 | tee target/rewrite.out
 
-echo "*****  Rebuilding with the snapshot"
 
+echo "*****  Datastore updates:"
 grep -r dev.morphia.MorphiaDatastore java
 
+echo "*****  Updated files:"
 git ls-files -m | grep "src/test"
 
+echo "*****  Rebuilding with the snapshot"
 mvn test  ${MVN_OPTS}
 
