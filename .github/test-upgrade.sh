@@ -21,8 +21,6 @@ mvn ${MVN_OPTS} -U org.openrewrite.maven:rewrite-maven-plugin:run \
   -Drewrite.exclusions="**/*.json" \
   2>&1 | tee target/rewrite.out
 
-exit
-
 echo "*****  Rebuilding with the snapshot"
 
 mvn test  ${MVN_OPTS}
