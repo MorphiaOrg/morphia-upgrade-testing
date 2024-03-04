@@ -23,7 +23,7 @@ mvn ${MVN_OPTS} -U org.openrewrite.maven:rewrite-maven-plugin:run \
 
 echo "*****  Rebuilding with the snapshot"
 
-ack --nopager dev.morphia.MorphiaDatastore
+grep -r dev.morphia.MorphiaDatastore java
 
 git ls-files -m | grep "src/test"
 
