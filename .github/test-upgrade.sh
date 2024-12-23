@@ -1,46 +1,32 @@
 #!/usr/bin/env bash
 
-if [ -d ../morphia/rewrite ]
+PROJECTS="$( pwd )/.github/projects"
+if [ -z "$1" ]
 then
-  cd ../morphia/rewrite && mvn install -DskipTests && cd -
+  echo a project name is needed.  the choices are:
+  ls -1 $PROJECTS
+  exit
 fi
 
-git checkout java
-#cp ../morphia/rewrite/src/main/resources/META-INF/rewrite/morphia3.yml rewrite.yml
+if [ -d $1 ]
+then
+  pwd
+  cd $1 2> /dev/null || echo Can not change to $1
+  git checkout -q .
+  git pull -q --rebase
+  cd - 2> /dev/null
+else
+  git clone $( cat $PROJECTS/$1/git ) $1
+fi
 
+export PATH=$PROJECTS:$PATH
+cd $1
 
-clear
-
-#if [ -z "$SKIP_GIT" ]
-#then
-#  git add .
-#  git reset --hard
-#  git checkout . #--quiet
-#fi
-
-echo building project
-mvn -q install -DskipTests
-
-echo "*****  updating projecting via openrewrite"
-mkdir -p target
-
-MVN_OPTS="-Pmorphia30"
-
-mvn rewrite:run
-
-#mvn ${MVN_OPTS} -U org.openrewrite.maven:rewrite-maven-plugin:run \
-#  -Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30 2>&1 \
-#  -Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:rewrite:3.0.0-SNAPSHOT \
-#  2>&1 | tee target/rewrite.out
-#  -Drewrite.exclusions="**/*.json" \
-
-
-echo "*****  Datastore uses:"
-grep -r 'import.*Datastore' java
-
-echo "*****  Updated files:"
-git ls-files -m | grep "src/test"
-
-echo "*****  Rebuilding with the snapshot"
-mvn test  ${MVN_OPTS}
-
+if [ -f $PROJECTS/$1/build.sh ]
+then
+  echo Running project-specific build
+  $PROJECTS/$1/build.sh
+else
+  echo Running standard build
+  $PROJECTS/build.sh
+fi
