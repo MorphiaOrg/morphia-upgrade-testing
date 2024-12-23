@@ -16,7 +16,7 @@
     </parent>
 
     <properties>
-        <morphia.version>2.4.12</morphia.version>
+        <morphia.version>2.4.14</morphia.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -49,11 +49,30 @@
                         <compilerArgument>-Xlint:deprecation</compilerArgument>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.openrewrite.maven</groupId>
+                    <artifactId>rewrite-maven-plugin</artifactId>
+                    <version>5.23.3</version>
+                    <configuration>
+                        <activeRecipes>
+                            <recipe>dev.morphia.UpgradeToMorphia30</recipe>
+                        </activeRecipes>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>dev.morphia.morphia</groupId>
+                            <artifactId>rewrite</artifactId>
+                            <version>3.0.0-SNAPSHOT</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
     <dependencyManagement>
         <dependencies>
+<!--
             <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-recipe-bom</artifactId>
@@ -61,6 +80,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+-->
             <dependency>
                 <groupId>dev.morphia.morphia</groupId>
                 <artifactId>morphia-core</artifactId>
