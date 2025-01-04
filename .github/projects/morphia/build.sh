@@ -2,11 +2,16 @@
 
 set -e
 
-export MVN="./mvnw"
+export MVN="$(pwd)/mvnw"
 
-$MVN install -DskipTests
+[ -d core/src/main/java ] && $MVN install -DskipTests
+rm -rf core/src/main/java
+cp -v ../.github/projects/morphia/core-pom.xml core/pom.xml
 rewrite.sh
-exit
+echo hit enter
+read
 
-echo Compiling
-$MVN -e test-compile 2>&1 | tee target/build.out
+echo -ne "\033]30;Compiling\007"
+pwd | tee target/tree.out
+$MVN -e -f core/pom.xml dependency:tree 2>&1 | tee -a target/tree.out
+$MVN -e -f core/pom.xml test-compile 2>&1 | tee target/build.out

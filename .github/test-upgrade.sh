@@ -24,9 +24,9 @@ cd $1
 
 if [ -f $PROJECTS/$1/build.sh ]
 then
-  echo Running project-specific build
+  echo -ne "\033]30;Running $1-specific build\007"
   $PROJECTS/$1/build.sh
 else
-  echo Running standard build
+  echo -ne "\033]30;Running standard build\007"
   $PROJECTS/build.sh
 fi
