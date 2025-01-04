@@ -26,14 +26,13 @@ jobs:
           cache: maven
       - name: Maybe install maven
         uses: sfesenko/setup-sdkman@v1
-        if: ${{ '$ACT' != '' }}
+        if: ${{ env.ACT == 'true' }}
         with:
           deps: maven:3.9.9
 
       - name: Checkout ${{ matrix.project }} repository
         working-directory: .github/projects/${{ matrix.project }}
         run: |
-          pwd
           git clone $( cat git ) git_repo
 
       - name: ${{ matrix.project }} Initial custom build
