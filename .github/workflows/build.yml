@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [ morphia, javabot ]
+        project: [ javabot, morphia ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,5 +24,54 @@ jobs:
           distribution: 'zulu'
           server-id: central
           cache: maven
-      - name: Perform Upgrade and Test
-        run: .github/test-upgrade.sh ${{ matrix.project }}
+      - name: Maybe install maven
+        uses: sfesenko/setup-sdkman@v1
+        if: ${{ '$ACT' != '' }}
+        with:
+          deps: maven:3.9.9
+
+      - name: Checkout ${{ matrix.project }} repository
+        working-directory: .github/projects/${{ matrix.project }}
+        run: |
+          pwd
+          git clone $( cat git ) git_repo
+
+      - name: ${{ matrix.project }} Initial custom build
+        working-directory: .github/projects/${{ matrix.project }}
+        if: ${{ hashFiles('build.sh') != '' }}
+        run: build.sh
+        env:
+          PROJECT: ${{ matrix.project }}
+
+      - name: ${{ matrix.project }} Initial standard build
+        working-directory: .github/projects/${{ matrix.project }}
+        if: ${{ hashFiles('build.sh') == '' }}
+        run: |
+          ../../build.sh
+        env:
+          PROJECT: ${{ matrix.project }}
+
+      - name: Apply upgrades
+        working-directory: .github/projects/${{ matrix.project }}/git_repo
+        run: |
+          mvn -e -U \
+            -DskipMavenParsing=true \
+            org.openrewrite.maven:rewrite-maven-plugin:run \
+          	-Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:rewrite:3.0.0-SNAPSHOT \
+          	-Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30
+
+      - name: ${{ matrix.project }} Post-upgrade custom build
+        working-directory: .github/projects/${{ matrix.project }}
+        if: ${{ hashFiles('build.sh') != '' }}
+        run: build.sh
+        env:
+          PROJECT: ${{ matrix.project }}
+
+      - name: ${{ matrix.project }} Post-upgrade standard build
+        working-directory: .github/projects/${{ matrix.project }}
+        if: ${{ hashFiles('build.sh') == '' }}
+        run: |
+          ../../build.sh
+        env:
+          PROJECT: ${{ matrix.project }}
+
