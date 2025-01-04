@@ -35,25 +35,23 @@ jobs:
         run: |
           git clone $( cat git ) git_repo
 
+      - name: Custom build file name
+        id: custom
+        run: echo "file=.github/projects/${{ matrix.project }}/build.sh" >> $GITHUB_OUTPUT
+
       - name: ${{ matrix.project }} Initial custom build
         working-directory: .github/projects/${{ matrix.project }}
-        if: ${{ hashFiles('build.sh') != '' }}
-        run: build.sh
-        env:
-          PROJECT: ${{ matrix.project }}
+        if: hashFiles(steps.custom.outputs.file) != ''
+        run: ./build.sh
 
       - name: ${{ matrix.project }} Initial standard build
         working-directory: .github/projects/${{ matrix.project }}
-        if: ${{ hashFiles('build.sh') == '' }}
-        run: |
-          ../../build.sh
-        env:
-          PROJECT: ${{ matrix.project }}
+        if: hashFiles(steps.custom.outputs.file) == ''
+        run: ../../build.sh
 
       - name: Apply upgrades
         working-directory: .github/projects/${{ matrix.project }}/git_repo
-        run: |
-          mvn -e -U \
+        run: mvn -e -U \
             -DskipMavenParsing=true \
             org.openrewrite.maven:rewrite-maven-plugin:run \
           	-Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:rewrite:3.0.0-SNAPSHOT \
@@ -61,16 +59,11 @@ jobs:
 
       - name: ${{ matrix.project }} Post-upgrade custom build
         working-directory: .github/projects/${{ matrix.project }}
-        if: ${{ hashFiles('build.sh') != '' }}
-        run: build.sh
-        env:
-          PROJECT: ${{ matrix.project }}
+        if: hashFiles(steps.custom.outputs.file) != ''
+        run: ./build.sh
 
       - name: ${{ matrix.project }} Post-upgrade standard build
         working-directory: .github/projects/${{ matrix.project }}
-        if: ${{ hashFiles('build.sh') == '' }}
-        run: |
-          ../../build.sh
-        env:
-          PROJECT: ${{ matrix.project }}
+        if: hashFiles(steps.custom.outputs.file) == ''
+        run: ../../build.sh
 
