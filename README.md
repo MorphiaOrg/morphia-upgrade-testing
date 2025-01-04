@@ -14,7 +14,7 @@ Each project needs a folder in .github/projects.  The bare minimum require is a 
 for your project.  The git url should include the hash of the branch/version you want to test against.  When you have that in place, 
 you'll need to update the [build workflow](.github/workflows/build.yml) to include your named project in the matrix definition.
 
-Typically, the [build.sh](.github/projects/build.sh) script include should be sufficient to test against your project.  If your project 
+Typically, the [build.sh](.github/build.sh) script include should be sufficient to test against your project.  If your project 
 needs a little tweaking, like morphia's does, you can copy build.sh in to your project's folder and customize however you need.
 
 > [!NOTE]

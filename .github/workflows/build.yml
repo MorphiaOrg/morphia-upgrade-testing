@@ -26,11 +26,3 @@ jobs:
           cache: maven
       - name: Perform Upgrade and Test
         run: .github/test-upgrade.sh ${{ matrix.project }}
-      - name: Collect logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: "logs-${{ matrix.project }}"
-          path: |
-            **/target/build.out
-            **/target/rewrite.out
-          retention-days: 7
