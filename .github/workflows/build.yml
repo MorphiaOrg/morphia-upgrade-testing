@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        git-url: [ morphia, javabot ]
+        project: [ morphia, javabot ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,4 +25,4 @@ jobs:
           server-id: central
           cache: maven
       - name: Perform Upgrade and Test
-        run: .github/test-upgrade.sh
+        run: .github/test-upgrade.sh ${ matrix.project }
