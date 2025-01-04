@@ -1,13 +1,10 @@
 # Morphia Upgrade Testing
-
-
 This project exists to automatically run the [openrewrite](https://docs.openrewrite.org/) recipe to assist when upgrading from 2.x to 
 the upcoming 3.0 release.  Failures in the actions are likely and most likely indicate areas that need to have a recipe written to 
 migrate.  Not every change can be automated so failures are likely a permanent issue.  
 
 ### Testing your own project
-The initial two projects supported here are the tests from the morphia 2.x branch and a personal project that also uses morphia.  If you 
-have a project that you would like to include in these runs to see how far off the upgrade process is, please file a pull request with 
+If you have a project that you would like to include in these runs to see how far off the upgrade process is, please file a pull request with 
 the information listed below.
 
 Each project needs a folder in .github/projects.  The bare minimum require is a file called `git` that contains the git repository url 
