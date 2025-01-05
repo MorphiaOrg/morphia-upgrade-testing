@@ -6,7 +6,7 @@
     <groupId>morphia-upgrading</groupId>
     <artifactId>morphia-rewrite-testing</artifactId>
     <version>0</version>
-    <packaging>none</packaging>
+    <packaging>pom</packaging>
 
     <description>This pom is just to make the github action happy</description>
 </project>

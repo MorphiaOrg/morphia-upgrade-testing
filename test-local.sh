@@ -2,9 +2,9 @@
 
 set -e
 
-WORKFLOWS="$( pwd )/.github"
-PROJECTS="${WORKFLOWS}/projects"
-PATH=${WORKFLOWS}:$PATH
+REPO_ROOT="$( pwd )"
+PROJECTS="${REPO_ROOT}/projects"
+PATH=${REPO_ROOT}:$PATH
 
 function title() {
     echo -ne "\033]30;$1\007"
@@ -14,7 +14,7 @@ function checkout() {
   if [ -d git_repo ]
   then
     echo git exists
-    cd git_repo ; git checkout . ; cd -
+    cd git_repo ; git reset --hard ; cd -
   else
     git clone $( cat git ) git_repo
   fi
@@ -22,8 +22,8 @@ function checkout() {
 
 function upgrade() {
   PROJECT=$1
-  PROJECT_ROOT=${WORKFLOWS}/projects/${PROJECT}
-  BUILD=${WORKFLOWS}/build.sh
+  PROJECT_ROOT=$( pwd )/projects/${PROJECT}
+  BUILD=$( pwd )/build.sh
   [ -e ${PROJECT_ROOT}/build.sh ] && BUILD=${PROJECT_ROOT}/build.sh
   echo BUILD=$BUILD
 
@@ -37,8 +37,7 @@ function upgrade() {
 
   echo -ne "\033]30;Applying recipes\007"
   cd $PROJECT_ROOT/git_repo
-  ${WORKFLOWS}/rewrite.sh
-  read
+  ${REPO_ROOT}/rewrite.sh
 
   cd $PROJECT_ROOT
   title "final $PROJECT build"
