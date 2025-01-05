@@ -12,6 +12,6 @@ then
   rm -rf src/main/java
   cp ../core-pom.xml pom.xml
 else
-  mvn -e test-compile | grep "\[ERROR\].*\.java.*"
+  mvn -e test-compile #| grep "\[ERROR\].*\.java.*"
 fi
 
