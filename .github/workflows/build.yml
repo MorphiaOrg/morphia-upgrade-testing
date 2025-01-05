@@ -30,7 +30,7 @@ jobs:
         uses: sfesenko/setup-sdkman@v1
 #        if: ${{ env.ACT == 'true' }}
         with:
-          deps: maven:4.0.0-rc2
+          deps: maven:4.0.0-rc-2
 
       - name: Checkout ${{ matrix.project }} repository
         working-directory: projects/${{ matrix.project }}
