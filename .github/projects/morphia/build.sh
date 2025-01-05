@@ -2,12 +2,10 @@
 
 set -e
 
-cd git_repo
-if [ -d core/src/main/java ]
+cd git_repo/core
+if [ -d src/main/java ]
 then
-  ./mvnw install -DskipTests
-  rm -rf core/src/main/java
-  cp ../core-pom.xml core/pom.xml
-else
-  ./mvnw -e -f core/pom.xml test-compile
+  rm -rf src/main/java
+  cp ../../core-pom.xml pom.xml
 fi
+  ../mvnw -e test-compile

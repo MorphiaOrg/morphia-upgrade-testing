@@ -37,19 +37,13 @@ jobs:
         run: |
           git clone $( cat git ) git_repo
 
-      - name: Custom build file name
-        id: custom
-        run: echo "file=.github/projects/${{ matrix.project }}/build.sh" >> $GITHUB_OUTPUT
+#      - name: Custom build file name
+#        id: custom
+#        run: echo "file=.github/projects/${{ matrix.project }}/build.sh" >> $GITHUB_OUTPUT
 
-      - name: ${{ matrix.project }} Initial custom build
+      - name: ${{ matrix.project }} Initial build
         working-directory: .github/projects/${{ matrix.project }}
-        if: hashFiles(steps.custom.outputs.file) != ''
-        run: ./build.sh
-
-      - name: ${{ matrix.project }} Initial standard build
-        working-directory: .github/projects/${{ matrix.project }}
-        if: hashFiles(steps.custom.outputs.file) == ''
-        run: ../../build.sh
+        run: "[ -e build.sh ] && ./build.sh || ../../build.sh"
 
       - name: Apply upgrades
         working-directory: .github/projects/${{ matrix.project }}/git_repo
@@ -60,13 +54,6 @@ jobs:
           	-Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:rewrite:3.0.0-SNAPSHOT \
           	-Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30
 
-      - name: ${{ matrix.project }} Post-upgrade custom build
+      - name: ${{ matrix.project }} Post-upgrade build
         working-directory: .github/projects/${{ matrix.project }}
-        if: hashFiles(steps.custom.outputs.file) != ''
-        run: ./build.sh
-
-      - name: ${{ matrix.project }} Post-upgrade standard build
-        working-directory: .github/projects/${{ matrix.project }}
-        if: hashFiles(steps.custom.outputs.file) == ''
-        run: ../../build.sh
-
+        run: [ -e build.sh ] && ./build.sh || ../../build.sh
