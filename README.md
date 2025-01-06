@@ -17,3 +17,21 @@ needs a little tweaking, like morphia's does, you can copy build.sh in to your p
 > [!NOTE]
 > This build assumes a maven based build because that's what I use.  If you use gradle, or heaven forfend, something else, you'll need 
 > to provide your own `build.sh` in your project's folder to build/run properly.
+
+If you would like to use this framework to test your own project but can't, for whatever, go the pull request route (maybe your project is 
+private so it's invisible from this project), you have a couple of options.  Make the changes listed above.  You can either fork the 
+project and run the actions under your own credentials/org or you can simply run it manually locally with the `test-local.sh` script like so:
+
+```shell
+./test-local.sh myprivateproject
+```
+
+This is run it all in the local filesystem.  If you have [act](https://github.com/nektos/act) installed (in this case, it's installed as 
+an [extension]() to github's `gh` tool), you can run it locally like this:
+
+```shell
+gh act --matrix project:myprivateproject | grep -vE "::debug::"
+```
+
+> [!NOTE]
+> You will need docker installed for this to work. The grep isn't entirely necessary but act (currently) emits a lot of debug statements that tend to occlude any useful information coming out of the action run.
