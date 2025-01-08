@@ -25,10 +25,8 @@ jobs:
           java-version: 17
           distribution: 'zulu'
           server-id: central
-          cache: maven
       - name: Install maven
         uses: sfesenko/setup-sdkman@v1
-#        if: ${{ env.ACT == 'true' }}
         with:
           deps: maven:4.0.0-rc-2
 
@@ -36,10 +34,6 @@ jobs:
         working-directory: projects/${{ matrix.project }}
         run: |
           git clone $( cat git ) git_repo
-
-#      - name: Custom build file name
-#        id: custom
-#        run: echo "file=projects/${{ matrix.project }}/build.sh" >> $GITHUB_OUTPUT
 
       - name: ${{ matrix.project }} Initial build
         working-directory: projects/${{ matrix.project }}
