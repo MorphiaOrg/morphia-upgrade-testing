@@ -46,6 +46,13 @@ function upgrade() {
   title "Done upgrading $PROJECT"
 }
 
+if [ -d ~/dev/morphia.dev ]
+then
+  cd ~/dev/morphia.dev/morphia/rewrite
+  mvn clean install
+  cd -
+fi
+
 if [ -z "$1" ]
 then
   ENTRIES=$( ls -1 $PROJECTS )
