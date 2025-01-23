@@ -14,7 +14,7 @@ function checkout() {
   if [ -d git_repo ]
   then
     echo git exists
-    cd git_repo ; git reset --hard ; cd -
+    cd git_repo ; git reset --hard ; git pull --rebase && cd -
   else
     git clone $( cat git ) git_repo
   fi
@@ -25,7 +25,6 @@ function upgrade() {
   PROJECT_ROOT=$( pwd )/projects/${PROJECT}
   BUILD=$( pwd )/build.sh
   [ -e ${PROJECT_ROOT}/build.sh ] && BUILD=${PROJECT_ROOT}/build.sh
-  echo BUILD=$BUILD
 
   cd $PROJECT_ROOT
 
@@ -46,12 +45,16 @@ function upgrade() {
   title "Done upgrading $PROJECT"
 }
 
-if [ -d ~/dev/morphia.dev ]
-then
-  cd ~/dev/morphia.dev/morphia/rewrite
-  mvn clean install
-  cd -
-fi
+function morphia() {
+  if [ -d ~/dev/morphia.dev/morphia/rewrite/src/main ]
+  then
+    cd ~/dev/morphia.dev/morphia/rewrite
+    mvn clean install
+    cd -
+  fi
+}
+
+morphia
 
 if [ -z "$1" ]
 then
