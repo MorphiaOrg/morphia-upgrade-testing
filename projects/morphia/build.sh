@@ -11,6 +11,7 @@ then
   rmdir core
   git rm -rf src/main/java
   cp ../core-pom.xml pom.xml
+  mvn clean
 else
   mvn -U -e test-compile #| grep "\[ERROR\].*\.java.*"
 fi

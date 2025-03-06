@@ -49,7 +49,7 @@ function morphia() {
   if [ -d ~/dev/morphia.dev/morphia/rewrite/src/main ]
   then
     cd ~/dev/morphia.dev/morphia/rewrite
-    mvn clean install
+    mvn clean install -DskipTests
     cd -
   fi
 }
