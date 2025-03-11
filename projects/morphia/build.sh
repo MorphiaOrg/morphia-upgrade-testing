@@ -12,6 +12,7 @@ then
   git rm -rf src/main/java
   cp ../core-pom.xml pom.xml
   mvn clean
+  find . -name *.json | xargs rm
 else
   mvn -U -e test-compile #| grep "\[ERROR\].*\.java.*"
 fi

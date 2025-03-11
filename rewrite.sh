@@ -6,5 +6,3 @@ mvn -e -U \
 		 -Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30,dev.morphia.InternalOnly \
 		 -Drewrite.recipeChangeLogLevel=DEBUG \
      -Drewrite.exportDatatables=true
-
-#		 -Drewrite.activeRecipes=dev.morphia.InternalOnly \
