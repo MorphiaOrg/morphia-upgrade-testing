@@ -12,8 +12,6 @@
     <artifactId>morphia-upgrading</artifactId>
     <version>0.0.0</version>
 
-
-
     <repositories>
         <repository>
             <id>sonatype-snapshots</id>
@@ -42,7 +40,7 @@
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
             <artifactId>morphia-core</artifactId>
-            <version>2.4.16-SNAPSHOT</version>
+            <version>2.5.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>io.smallrye.config</groupId>
