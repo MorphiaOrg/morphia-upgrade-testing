@@ -21,7 +21,7 @@ $(MORPHIA_JAR): $(CORE30_FILES)
 	cd $(MORPHIA_HOME)/core/ ; mvn -q install -DskipTests
 
 $(REWRITE_JAR): $(MORPHIA_HOME)/rewrite/src/main/resources/META-INF/rewrite/rewrite.yml $(REWRITE_FILES)
-	cd $(MORPHIA_HOME)/rewrite/ ; mvn install #-DskipTests
+	cd $(MORPHIA_HOME)/rewrite/ ; mvn install -DskipTests
 
 clean:
 	rm -rf projects/*/git_repo
