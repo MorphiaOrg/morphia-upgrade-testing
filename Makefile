@@ -8,11 +8,13 @@ REWRITE_JAR=~/.m2/repository/dev/morphia/morphia/morphia-rewrite/3.0.0-SNAPSHOT/
 REWRITE_FILES=$(shell find $(MORPHIA_HOME)/rewrite -name *.java)
 CORE30_FILES=$(shell find $(MORPHIA_HOME)/core -name *.java )
 
-all: jars
-	[ -d projects/morphia/git_repo ] && cd projects/morphia/git_repo && git reset --hard || true
-	./test-local.sh morphia | tee morphia.out
+morphia: $(REWRITE_JAR) $(MORPHIA_2X_JAR) $(MORPHIA_JAR)
+	[ -d projects/$@/git_repo ] && cd projects/$@/git_repo && git reset --hard || true
+	./test-local.sh $@ | tee $@.out
 
-jars: $(REWRITE_JAR) $(MORPHIA_2X_JAR) $(MORPHIA_JAR)
+javabot: $(REWRITE_JAR) $(MORPHIA_JAR)
+	[ -d projects/$@/git_repo ] && cd projects/$@/git_repo && git reset --hard || true
+	./test-local.sh $@ | tee $@.out
 
 $(MORPHIA_2X_JAR): $(shell find $(MORPHIA_2X_HOME)/core -name *.java``)
 	cd $(MORPHIA_2X_HOME)/core ; mvn install -DskipTests
