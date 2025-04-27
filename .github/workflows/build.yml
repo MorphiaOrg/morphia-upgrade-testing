@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [ javabot, morphia ]
+        project: [ morphia ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
