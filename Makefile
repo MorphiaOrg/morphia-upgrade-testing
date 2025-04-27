@@ -9,11 +9,11 @@ REWRITE_FILES=$(shell find $(MORPHIA_HOME)/rewrite -name *.java)
 CORE30_FILES=$(shell find $(MORPHIA_HOME)/core -name *.java )
 
 morphia: $(REWRITE_JAR) $(MORPHIA_2X_JAR) $(MORPHIA_JAR)
-	[ -d projects/$@/git_repo ] && cd projects/$@/git_repo && git reset --hard || true
+	./bin/reset.sh $@
 	./test-local.sh $@ | tee $@.out
 
 javabot: $(REWRITE_JAR) $(MORPHIA_JAR)
-	[ -d projects/$@/git_repo ] && cd projects/$@/git_repo && git reset --hard || true
+	./bin/reset.sh	 $@
 	./test-local.sh $@ | tee $@.out
 
 $(MORPHIA_2X_JAR): $(shell find $(MORPHIA_2X_HOME)/core -name *.java``)
@@ -27,3 +27,5 @@ $(REWRITE_JAR): $(MORPHIA_HOME)/rewrite/src/main/resources/META-INF/rewrite/rewr
 
 clean:
 	rm -rf projects/*/git_repo
+
+.PHONY:
