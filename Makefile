@@ -1,22 +1,25 @@
 MORPHIA_CURRENT=2.5.1
-MORPHIA_2X_HOME=~/dev/morphia.dev/morphia-2.x
-MORPHIA_2X_JAR=~/.m2/repository/dev/morphia/morphia/morphia-core/$(MORPHIA_CURRENT)-SNAPSHOT/morphia-core-$(MORPHIA_CURRENT)-SNAPSHOT.jar
-
+MORPHIA_M2=~/.m2/repository/dev/morphia/morphia
 MORPHIA_HOME=~/dev/morphia.dev/morphia
-MORPHIA_JAR=~/.m2/repository/dev/morphia/morphia/morphia-core/3.0.0-SNAPSHOT/morphia-core-3.0.0-SNAPSHOT.jar
-REWRITE_JAR=~/.m2/repository/dev/morphia/morphia/morphia-rewrite/3.0.0-SNAPSHOT/morphia-rewrite-3.0.0-SNAPSHOT.jar
+MORPHIA_2X_HOME=~/dev/morphia.dev/morphia-2.x
+MORPHIA_2X_JAR=$(MORPHIA_M2)/morphia-core/$(MORPHIA_CURRENT)-SNAPSHOT/morphia-core-$(MORPHIA_CURRENT)-SNAPSHOT.jar
+
+MORPHIA_JAR=$(MORPHIA_M2)/morphia-core/3.0.0-SNAPSHOT/morphia-core-3.0.0-SNAPSHOT.jar
+REWRITE_JAR=$(MORPHIA_M2)/morphia-rewrite/3.0.0-SNAPSHOT/morphia-rewrite-3.0.0-SNAPSHOT.jar
 REWRITE_FILES=$(shell find $(MORPHIA_HOME)/rewrite -name *.java)
 CORE30_FILES=$(shell find $(MORPHIA_HOME)/core -name *.java )
 
-morphia: $(REWRITE_JAR) $(MORPHIA_2X_JAR) $(MORPHIA_JAR)
+morphia: jars
 	./bin/reset.sh $@
-	./test-local.sh $@ | tee $@.out
+	./test-local.sh $@ | tee $@.log
+
+jars: $(REWRITE_JAR) $(MORPHIA_2X_JAR) $(MORPHIA_JAR)
 
 javabot: $(REWRITE_JAR) $(MORPHIA_JAR)
 	./bin/reset.sh	 $@
-	./test-local.sh $@ | tee $@.out
+	./test-local.sh $@ | tee $@.log
 
-$(MORPHIA_2X_JAR): $(shell find $(MORPHIA_2X_HOME)/core -name *.java``)
+$(MORPHIA_2X_JAR): $(shell find $(MORPHIA_2X_HOME)/core -name *.java)
 	cd $(MORPHIA_2X_HOME)/core ; mvn install -DskipTests
 
 $(MORPHIA_JAR): $(CORE30_FILES)
