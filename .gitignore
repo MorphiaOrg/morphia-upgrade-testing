@@ -40,3 +40,5 @@ build/
 ### Mac OS ###
 .DS_Store
 morphia.out
+
+projects/*/git_repo

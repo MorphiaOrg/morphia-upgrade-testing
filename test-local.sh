@@ -36,7 +36,7 @@ function upgrade() {
 
   echo -ne "\033]30;Applying recipes\007"
   cd $PROJECT_ROOT/git_repo
-  ${REPO_ROOT}/rewrite.sh
+  ${REPO_ROOT}/rewrite.sh 2>&1 | tee rewrite.out
 
   cd $PROJECT_ROOT
   title "final $PROJECT build"

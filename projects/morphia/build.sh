@@ -17,6 +17,6 @@ else
     source "$HOME/.sdkman/bin/sdkman-init.sh"
     sdk u java $(sdk l java | egrep 'installed|local only' | grep 17 | head -n 1 | cut -d \| -f6)
     sdk u maven 4.0.0-rc-3
-    mvn  test-compile #| grep "\[ERROR\].*\.java.*"
+    mvn test-compile #| grep "\[ERROR\].*\.java.*"
 fi
 

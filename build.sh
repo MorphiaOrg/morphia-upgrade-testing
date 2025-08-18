@@ -3,4 +3,4 @@
 set -e
 
 cd git_repo
-mvn -U -e test-compile
+mvn -e test-compile

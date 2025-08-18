@@ -9,14 +9,16 @@ REWRITE_JAR=$(MORPHIA_M2)/morphia-rewrite/3.0.0-SNAPSHOT/morphia-rewrite-3.0.0-S
 REWRITE_FILES=$(shell find $(MORPHIA_HOME)/rewrite -name *.java)
 CORE30_FILES=$(shell find $(MORPHIA_HOME)/core -name *.java )
 
+all: morphia javabot
+
 morphia: jars
 	./bin/reset.sh $@
 	./test-local.sh $@ | tee $@.log
 
 jars: $(REWRITE_JAR) $(MORPHIA_2X_JAR) $(MORPHIA_JAR)
 
-javabot: $(REWRITE_JAR) $(MORPHIA_JAR)
-	./bin/reset.sh	 $@
+javabot: jars
+	./bin/reset.sh $@
 	./test-local.sh $@ | tee $@.log
 
 $(MORPHIA_2X_JAR): $(shell find $(MORPHIA_2X_HOME)/core -name *.java)
@@ -27,6 +29,10 @@ $(MORPHIA_JAR): $(CORE30_FILES)
 
 $(REWRITE_JAR): $(MORPHIA_HOME)/rewrite/src/main/resources/META-INF/rewrite/rewrite.yml $(REWRITE_FILES)
 	cd $(MORPHIA_HOME)/rewrite/ ; mvn install -DskipTests
+
+reset:
+	@./bin/reset.sh morphia
+	@./bin/reset.sh javabot
 
 clean:
 	rm -rf projects/*/git_repo
