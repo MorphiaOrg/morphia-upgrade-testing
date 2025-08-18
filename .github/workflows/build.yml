@@ -29,7 +29,7 @@ jobs:
       - name: Install maven
         uses: sfesenko/setup-sdkman@v1
         with:
-          deps: maven:4.0.0-rc-2
+          deps: maven:4.0.0-rc-4
 
       - name: Checkout ${{ matrix.project }} repository
         working-directory: projects/${{ matrix.project }}
