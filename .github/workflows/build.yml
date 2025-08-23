@@ -31,19 +31,6 @@ jobs:
         with:
           deps: maven:4.0.0-rc-4
 
-      - name: Checkout ${{ matrix.project }} repository
-        working-directory: projects/${{ matrix.project }}
+      - name: Run Migration
         run: |
-          git clone $( cat git ) git_repo
-
-      - name: ${{ matrix.project }} Initial build
-        working-directory: projects/${{ matrix.project }}
-        run: "[ -e build.sh ] && ./build.sh || ../../build.sh"
-
-      - name: Apply upgrades
-        working-directory: projects/${{ matrix.project }}/git_repo
-        run: ../../../rewrite.sh
-
-      - name: ${{ matrix.project }} Post-upgrade build
-        working-directory: projects/${{ matrix.project }}
-        run: "[ -e build.sh ] && ./build.sh || ../../build.sh"
+          make ${{ matrix.project }}
