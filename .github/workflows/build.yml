@@ -35,5 +35,4 @@ jobs:
 
       - name: Run Migration
         run: |
-          sh ~/.sdkman/bin/sdkman-init.sh 
-          echo make ${{ matrix.project }}
+          make ${{ matrix.project }}
