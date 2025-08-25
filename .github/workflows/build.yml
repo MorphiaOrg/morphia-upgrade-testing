@@ -31,9 +31,8 @@ jobs:
         with:
           deps: maven:4.0.0-rc-4
 
-      - name: Test sdkman
-        run: sdk env
-
       - name: Run Migration
+        uses: sdkman/sdkman-action@v1
         run: |
-          make ${{ matrix.project }}
+          sdk env
+          echo make ${{ matrix.project }}
