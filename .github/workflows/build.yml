@@ -26,15 +26,14 @@ jobs:
           distribution: 'zulu'
           server-id: central
           cache: maven
-      - name: Install maven
-        uses: sfesenko/setup-sdkman@v1
-        with:
-          deps: maven:4.0.0-rc-4
 
       - name: Set up sdkman
         uses: sdkman/sdkman-action@main
+        with:
+          candidate: maven
+          version: 4.0.0-rc-4
 
       - name: Run Migration
         run: |
-          sdk env
+          sdk -h
           echo make ${{ matrix.project }}
