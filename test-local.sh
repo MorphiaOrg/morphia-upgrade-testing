@@ -54,7 +54,7 @@ function morphia() {
   fi
 }
 
-morphia
+#morphia
 
 if [ -z "$1" ]
 then
