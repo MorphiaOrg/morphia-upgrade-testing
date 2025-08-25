@@ -6,29 +6,27 @@ MORPHIA_2X_JAR=$(MORPHIA_M2)/morphia-core/$(MORPHIA_CURRENT)-SNAPSHOT/morphia-co
 
 MORPHIA_JAR=$(MORPHIA_M2)/morphia-core/3.0.0-SNAPSHOT/morphia-core-3.0.0-SNAPSHOT.jar
 REWRITE_JAR=$(MORPHIA_M2)/morphia-rewrite/3.0.0-SNAPSHOT/morphia-rewrite-3.0.0-SNAPSHOT.jar
-REWRITE_FILES=$(shell find $(MORPHIA_HOME)/rewrite -name *.java)
-CORE30_FILES=$(shell find $(MORPHIA_HOME)/core -name *.java )
 
 all: morphia javabot
 
 morphia: jars
-	./bin/reset.sh $@
-	./test-local.sh $@ | tee $@.log
+	@./bin/reset.sh $@
+	@./test-local.sh $@ | tee $@.log
+
+javabot: jars
+	@./bin/reset.sh $@
+	@./test-local.sh $@ | tee $@.log
 
 jars: $(REWRITE_JAR) $(MORPHIA_2X_JAR) $(MORPHIA_JAR)
 
-javabot: jars
-	./bin/reset.sh $@
-	./test-local.sh $@ | tee $@.log
+$(MORPHIA_2X_JAR): $(shell find $(MORPHIA_2X_HOME)/core -name *.java 2>/dev/null)
+	[ -d $(MORPHIA_2X_HOME)/core ] && (cd $(MORPHIA_2X_HOME)/core ; mvn install -DskipTests)
 
-$(MORPHIA_2X_JAR): $(shell find $(MORPHIA_2X_HOME)/core -name *.java)
-	cd $(MORPHIA_2X_HOME)/core ; mvn install -DskipTests
+$(MORPHIA_JAR): $(shell find $(MORPHIA_HOME)/core -name *.java 2>/dev/null)
+	[ -d $(MORPHIA_HOME)/core ] && (cd $(MORPHIA_HOME)/core/ ; mvn -q install -DskipTests)
 
-$(MORPHIA_JAR): $(CORE30_FILES)
-	cd $(MORPHIA_HOME)/core/ ; mvn -q install -DskipTests
-
-$(REWRITE_JAR): $(MORPHIA_HOME)/rewrite/src/main/resources/META-INF/rewrite/rewrite.yml $(REWRITE_FILES)
-	cd $(MORPHIA_HOME)/rewrite/ ; mvn install -DskipTests
+$(REWRITE_JAR): $(shell find $(MORPHIA_HOME)/rewrite/src/main 2>/dev/null)
+	[ -d $(MORPHIA_HOME)/rewrite ] && (cd $(MORPHIA_HOME)/rewrite/ ; mvn install -DskipTests)
 
 reset:
 	@./bin/reset.sh morphia
