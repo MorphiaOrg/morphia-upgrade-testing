@@ -12,10 +12,10 @@ PROJECT_ROOT=projects/$(PROJECT)
 all: morphia javabot
 
 morphia:
-	@PROJECT=$@ $(MAKE) upgrade
+	@PROJECT=$@ $(MAKE) -s upgrade
 
 javabot: jars
-	@PROJECT=$@ $(MAKE) upgrade
+	@PROJECT=$@ $(MAKE) -s upgrade
 
 log:
 	@echo upgrading $(PROJECT)
@@ -57,8 +57,8 @@ $(REWRITE_JAR): $(shell find $(MORPHIA_HOME)/rewrite/src/main 2>/dev/null)
 	@[ -d $(MORPHIA_HOME)/rewrite ] && (cd $(MORPHIA_HOME)/rewrite/ ; mvn install -DskipTests)
 
 reset:
-	@./bin/reset.sh morphia
-	@./bin/reset.sh javabot
+	@PROJECT=morphia $(MAKE) -s checkout
+	@PROJECT=javabot $(MAKE) -s checkout
 
 clean:
 	rm -rf projects/*/git_repo
