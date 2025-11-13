@@ -32,7 +32,8 @@ rewrite:
 		-Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30,dev.morphia.InternalOnly \
 		-Drewrite.recipeChangeLogLevel=DEBUG \
 		-Drewrite.exportDatatables=true \
-		-Drewrite.exclusions=target/generated-*
+		-Drewrite.exclusions=target/generated-* && \
+		mvn spotless:apply || true
 
 build:
 	@echo "*** Building $(PROJECT)"
