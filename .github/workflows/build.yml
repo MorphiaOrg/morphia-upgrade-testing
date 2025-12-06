@@ -19,6 +19,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Checkout Morphia
+        uses: actions/checkout@v6
+        with:
+          repository: MorphiaOrg/morphia
+          path: ~/dev/morphia.dev/morphia
+
+      - name: Checkout Morphia 2.5.x
+        uses: actions/checkout@v6
+        with:
+          repository: MorphiaOrg/morphia
+          ref: 2.5.x
+          path: ~/dev/morphia.dev/morphia-2.x
+
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
