@@ -1,7 +1,7 @@
 MORPHIA_CURRENT=2.5.1
-MORPHIA_M2=~/.m2/repository/dev/morphia/morphia
-MORPHIA_HOME=~/dev/morphia.dev/morphia
-MORPHIA_2X_HOME=~/dev/morphia.dev/morphia-2.x
+MORPHIA_M2=$(HOME)/.m2/repository/dev/morphia/morphia
+MORPHIA_HOME=$(HOME)/dev/morphia.dev/morphia
+MORPHIA_2X_HOME=$(HOME)/dev/morphia.dev/morphia-2.x
 MORPHIA_2X_JAR=$(MORPHIA_M2)/morphia-core/$(MORPHIA_CURRENT)-SNAPSHOT/morphia-core-$(MORPHIA_CURRENT)-SNAPSHOT.jar
 
 MORPHIA_JAR=$(MORPHIA_M2)/morphia-core/3.0.0-SNAPSHOT/morphia-core-3.0.0-SNAPSHOT.jar
