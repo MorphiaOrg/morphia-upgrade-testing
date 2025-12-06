@@ -10,12 +10,12 @@ then
   git mv core/src  .
   for folder in */pom.xml
   do
-    echo Removing $( dirname $folder )
+#    echo Removing $( dirname $folder )
     rm -rf $( dirname $folder )
   done
   rm -rf docs design
   git rm -rfq src/main/java
   find . -name "*.json" | xargs rm
-  cp -v ../core-pom.xml pom.xml
+  cp ../core-pom.xml pom.xml
 fi
 

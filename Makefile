@@ -18,7 +18,7 @@ javabot: jars
 	@PROJECT=$@ $(MAKE) -s upgrade
 
 log:
-	@echo upgrading $(PROJECT)
+	@echo "upgrading $(PROJECT)"
 
 upgrade: log checkout jars rewrite build
 
@@ -64,4 +64,4 @@ reset:
 clean:
 	rm -rf projects/*/git_repo
 
-.PHONY:
+.PHONY: log rewrite build reset
