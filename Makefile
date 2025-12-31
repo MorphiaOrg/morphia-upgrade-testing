@@ -1,11 +1,14 @@
 MORPHIA_CURRENT=2.5.1
 MORPHIA_M2=$(HOME)/.m2/repository/dev/morphia/morphia
-MORPHIA_HOME=$(HOME)/dev/morphia.dev/morphia
+MORPHIA_HOME?=$(HOME)/dev/morphia.dev/morphia
 
 MORPHIA_JAR=$(MORPHIA_M2)/morphia-core/3.0.0-SNAPSHOT/morphia-core-3.0.0-SNAPSHOT.jar
 REWRITE_JAR=$(MORPHIA_M2)/morphia-rewrite/3.0.0-SNAPSHOT/morphia-rewrite-3.0.0-SNAPSHOT.jar
 
 PROJECT_ROOT=projects/$(PROJECT)
+
+$(info HOME=$(HOME))
+$(info MORPHIA_HOME=$(MORPHIA_HOME))
 
 all: morphia javabot
 
@@ -44,13 +47,13 @@ checkout: $(PROJECT_ROOT)/git_repo
 $(PROJECT_ROOT)/git_repo:
 	@git clone $(shell cat ${PROJECT_ROOT}/git) $@
 
-jars: $(REWRITE_JAR) $(MORPHIA_JAR) # $(MORPHIA_2X_JAR)
+jars: $(REWRITE_JAR) $(MORPHIA_JAR)
 
 $(MORPHIA_JAR): $(shell find $(MORPHIA_HOME)/core -name *.java 2>/dev/null)
-	@[ -d $(MORPHIA_HOME)/core ] && (cd $(MORPHIA_HOME)/core/ ; mvn -q install -DskipTests)
+	[ -d $(MORPHIA_HOME)/core ] && (cd $(MORPHIA_HOME)/core/ ; mvn -q install -DskipTests)
 
 $(REWRITE_JAR): $(shell find $(MORPHIA_HOME)/rewrite/src/main 2>/dev/null)
-	@[ -d $(MORPHIA_HOME)/rewrite ] && (cd $(MORPHIA_HOME)/rewrite/ ; mvn install -DskipTests)
+	[ -d $(MORPHIA_HOME)/rewrite ] && (cd $(MORPHIA_HOME)/rewrite/ ; mvn install -DskipTests)
 
 reset:
 	@PROJECT=morphia $(MAKE) -s checkout
