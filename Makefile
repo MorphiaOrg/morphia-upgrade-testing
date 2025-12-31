@@ -50,10 +50,10 @@ $(PROJECT_ROOT)/git_repo:
 jars: $(REWRITE_JAR) $(MORPHIA_JAR)
 
 $(MORPHIA_JAR): $(shell find $(MORPHIA_HOME)/core -name *.java 2>/dev/null)
-	[ -d $(MORPHIA_HOME)/core ] && (cd $(MORPHIA_HOME)/core/ ; mvn -q install -DskipTests)
+	[ -d $(MORPHIA_HOME) ] && (cd $(MORPHIA_HOME) ; mvn -q install -DskipTests)
 
 $(REWRITE_JAR): $(shell find $(MORPHIA_HOME)/rewrite/src/main 2>/dev/null)
-	[ -d $(MORPHIA_HOME)/rewrite ] && (cd $(MORPHIA_HOME)/rewrite/ ; mvn install -DskipTests)
+	[ -d $(MORPHIA_HOME) ] && (cd $(MORPHIA_HOME) ; mvn install -DskipTests)
 
 reset:
 	@PROJECT=morphia $(MAKE) -s checkout
