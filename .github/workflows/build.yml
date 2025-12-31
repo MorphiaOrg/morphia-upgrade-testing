@@ -41,7 +41,7 @@ jobs:
           version: 4.0.0-rc-5
 
       - name: Run Migration
-        continue-on-error: ${{ matrix.project != morphia }}
+        continue-on-error: ${{ matrix.project != 'morphia' }}
         run: |
           make ${{ matrix.project }}
         env:
