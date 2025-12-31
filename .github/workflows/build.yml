@@ -24,14 +24,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: MorphiaOrg/morphia
-          path: ~/dev/morphia.dev/morphia
-
-      - name: Checkout Morphia 2.5.x
-        uses: actions/checkout@v6
-        with:
-          repository: MorphiaOrg/morphia
-          ref: 2.5.x
-          path: ~/dev/morphia.dev/morphia-2.x
+          path: ${{ github.workspace }}/../morphia
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -45,7 +38,7 @@ jobs:
         uses: sdkman/sdkman-action@main
         with:
           candidate: maven
-          version: 4.0.0-rc-4
+          version: 4.0.0-rc-5
 
       - name: Run Migration
         run: |

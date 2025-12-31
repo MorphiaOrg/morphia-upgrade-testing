@@ -12,7 +12,7 @@ all: morphia javabot
 morphia:
 	@PROJECT=$@ $(MAKE) -s upgrade
 
-javabot: jars
+javabot:
 	@PROJECT=$@ $(MAKE) -s upgrade
 
 log:
