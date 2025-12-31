@@ -20,6 +20,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Checkout Morphia
+        uses: actions/checkout@v6
+        with:
+          repository: MorphiaOrg/morphia
+          path: ${{ github.workspace }}/morphia
+
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
