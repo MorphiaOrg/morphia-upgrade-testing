@@ -1,8 +1,6 @@
 MORPHIA_CURRENT=2.5.1
 MORPHIA_M2=$(HOME)/.m2/repository/dev/morphia/morphia
 MORPHIA_HOME=$(HOME)/dev/morphia.dev/morphia
-MORPHIA_2X_HOME=$(HOME)/dev/morphia.dev/morphia-2.x
-MORPHIA_2X_JAR=$(MORPHIA_M2)/morphia-core/$(MORPHIA_CURRENT)-SNAPSHOT/morphia-core-$(MORPHIA_CURRENT)-SNAPSHOT.jar
 
 MORPHIA_JAR=$(MORPHIA_M2)/morphia-core/3.0.0-SNAPSHOT/morphia-core-3.0.0-SNAPSHOT.jar
 REWRITE_JAR=$(MORPHIA_M2)/morphia-rewrite/3.0.0-SNAPSHOT/morphia-rewrite-3.0.0-SNAPSHOT.jar
@@ -46,10 +44,7 @@ checkout: $(PROJECT_ROOT)/git_repo
 $(PROJECT_ROOT)/git_repo:
 	@git clone $(shell cat ${PROJECT_ROOT}/git) $@
 
-jars: $(REWRITE_JAR) $(MORPHIA_2X_JAR) $(MORPHIA_JAR)
-
-$(MORPHIA_2X_JAR): $(shell find $(MORPHIA_2X_HOME)/core -name *.java 2>/dev/null)
-	@[ -d $(MORPHIA_2X_HOME)/core ] && (cd $(MORPHIA_2X_HOME)/core ; mvn install -DskipTests)
+jars: $(REWRITE_JAR) $(MORPHIA_JAR) # $(MORPHIA_2X_JAR)
 
 $(MORPHIA_JAR): $(shell find $(MORPHIA_HOME)/core -name *.java 2>/dev/null)
 	@[ -d $(MORPHIA_HOME)/core ] && (cd $(MORPHIA_HOME)/core/ ; mvn -q install -DskipTests)
