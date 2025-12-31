@@ -43,3 +43,5 @@ jobs:
       - name: Run Migration
         run: |
           make ${{ matrix.project }}
+        env:
+          MORPHIA_HOME: ${{ github.workspace }}/morphia
