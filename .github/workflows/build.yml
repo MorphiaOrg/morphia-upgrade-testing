@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: MorphiaOrg/morphia
-          path: ${{ github.workspace }}/morphia
+          path: ${{ github.workspace }}/morphia-3.x
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -44,4 +44,4 @@ jobs:
         run: |
           make ${{ matrix.project }}
         env:
-          MORPHIA_HOME: ${{ github.workspace }}/morphia
+          MORPHIA_HOME: ${{ github.workspace }}/morphia-3.x
