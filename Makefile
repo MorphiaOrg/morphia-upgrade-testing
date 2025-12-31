@@ -10,10 +10,10 @@ PROJECT_ROOT=projects/$(PROJECT)
 all: morphia javabot
 
 morphia:
-	@PROJECT=$@ $(MAKE) -s upgrade
+	@PROJECT=$@ $(MAKE) upgrade
 
 javabot:
-	@PROJECT=$@ $(MAKE) -s upgrade
+	@PROJECT=$@ $(MAKE) upgrade
 
 log:
 	@echo "upgrading $(PROJECT)"
