@@ -1,11 +1,11 @@
 MORPHIA_CURRENT=2.5.2
 MORPHIA_M2=$(HOME)/.m2/repository/dev/morphia/morphia
 MORPHIA_HOME?=$(if $(wildcard $(HOME)/dev/morphia.dev/morphia),$(HOME)/dev/morphia.dev/morphia,git@github.com:MorphiaOrg/morphia.git)
-
 MORPHIA_JAR=$(MORPHIA_M2)/morphia-core/3.0.0-SNAPSHOT/morphia-core-3.0.0-SNAPSHOT.jar
 REWRITE_JAR=$(MORPHIA_M2)/morphia-rewrite/3.0.0-SNAPSHOT/morphia-rewrite-3.0.0-SNAPSHOT.jar
 
 PROJECT_ROOT=projects/$(PROJECT)
+MORPHIA_UPGRADE_REPO=/tmp/morphia_upgrades/$(PROJECT)/
 
 $(info HOME=$(HOME))
 $(info MORPHIA_HOME=$(MORPHIA_HOME))
@@ -28,7 +28,7 @@ rewrite:
 	@echo "*** Rewriting $(PROJECT)"
 	@cd $(PROJECT_ROOT) ; [ -f prep.sh ] && sh prep.sh || true
 
-	@cd /tmp/morphia_upgrade/$(PROJECT)/git_repo ; mvn -e \
+	@cd $(MORPHIA_UPGRADE_REPO) ; mvn -e \
 		org.openrewrite.maven:rewrite-maven-plugin:run \
 		-Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:morphia-rewrite:3.0.0-SNAPSHOT \
 		-Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30,dev.morphia.InternalOnly \
@@ -39,13 +39,13 @@ rewrite:
 
 build:
 	@echo "*** Building $(PROJECT)"
-	@cd /tmp/morphia_upgrade/$(PROJECT)/git_repo ; mvn -e clean test-compile
+	@cd $(MORPHIA_UPGRADE_REPO) ; mvn -e clean test-compile
 
-checkout: /tmp/morphia_upgrade/$(PROJECT)/git_repo
-	@echo "*** Preparing git_repo for $(PROJECT)"
-	@[ -d /tmp/morphia_upgrade/$(PROJECT)/git_repo ] && cd /tmp/morphia_upgrade/$(PROJECT)/git_repo && git reset --hard || true
+checkout: $(MORPHIA_UPGRADE_REPO)
+	@echo "*** Preparing repository for $(PROJECT)"
+	@[ -d $(MORPHIA_UPGRADE_REPO) ] && cd $(MORPHIA_UPGRADE_REPO) && git reset --hard || true
 
-/tmp/morphia_upgrade/$(PROJECT)/git_repo:
+$(MORPHIA_UPGRADE_REPO):
 	@git clone $(shell cat ${PROJECT_ROOT}/git) $@
 
 jars: $(REWRITE_JAR) $(MORPHIA_JAR)
@@ -61,6 +61,6 @@ reset:
 	@PROJECT=javabot $(MAKE) -s checkout
 
 clean:
-	rm -rf /tmp/morphia_upgrade/*/git_repo
+	rm -rf $(MORPHIA_UPGRADE_REPO)
 
 .PHONY: log rewrite build reset

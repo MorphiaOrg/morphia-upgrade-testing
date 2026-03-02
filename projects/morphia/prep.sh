@@ -3,7 +3,7 @@
 set -e
 
 ROOT_DIR=$(pwd)
-cd /tmp/morphia_upgrade/morphia/git_repo
+cd /tmp/morphia_upgrade/morphia/
 
 if [ -d core ]
 then
