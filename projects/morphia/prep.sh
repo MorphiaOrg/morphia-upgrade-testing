@@ -2,7 +2,8 @@
 
 set -e
 
-cd git_repo
+ROOT_DIR=$(pwd)
+cd /tmp/morphia_upgrade/morphia/git_repo
 
 if [ -d core ]
 then
@@ -17,6 +18,7 @@ then
   git rm -rfq src/main/java
   find . -name "*.json" | xargs rm
   sed -i"" 's/new Mapper(mapper)/mapper.copy()/g' src/test/java/dev/morphia/test/mapping/TestMapper.java
-  cp ../core-pom.xml pom.xml
+  cp ${ROOT_DIR}/core-pom.xml pom.xml
+  exit
 fi
 

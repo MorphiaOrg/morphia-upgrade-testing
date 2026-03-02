@@ -28,7 +28,7 @@ rewrite:
 	@echo "*** Rewriting $(PROJECT)"
 	@cd $(PROJECT_ROOT) ; [ -f prep.sh ] && sh prep.sh || true
 
-	@cd $(PROJECT_ROOT)/git_repo ; mvn -e \
+	@cd /tmp/morphia_upgrade/$(PROJECT)/git_repo ; mvn -e \
 		org.openrewrite.maven:rewrite-maven-plugin:run \
 		-Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:morphia-rewrite:3.0.0-SNAPSHOT \
 		-Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30,dev.morphia.InternalOnly \
@@ -39,13 +39,13 @@ rewrite:
 
 build:
 	@echo "*** Building $(PROJECT)"
-	@cd $(PROJECT_ROOT)/git_repo ; mvn -e clean test-compile
+	@cd /tmp/morphia_upgrade/$(PROJECT)/git_repo ; mvn -e clean test-compile
 
-checkout: $(PROJECT_ROOT)/git_repo
+checkout: /tmp/morphia_upgrade/$(PROJECT)/git_repo
 	@echo "*** Preparing git_repo for $(PROJECT)"
-	@[ -d projects/$(PROJECT)/git_repo ] && cd projects/$(PROJECT)/git_repo && git reset --hard || true
+	@[ -d /tmp/morphia_upgrade/$(PROJECT)/git_repo ] && cd /tmp/morphia_upgrade/$(PROJECT)/git_repo && git reset --hard || true
 
-$(PROJECT_ROOT)/git_repo:
+/tmp/morphia_upgrade/$(PROJECT)/git_repo:
 	@git clone $(shell cat ${PROJECT_ROOT}/git) $@
 
 jars: $(REWRITE_JAR) $(MORPHIA_JAR)
@@ -61,6 +61,6 @@ reset:
 	@PROJECT=javabot $(MAKE) -s checkout
 
 clean:
-	rm -rf projects/*/git_repo
+	rm -rf /tmp/morphia_upgrade/*/git_repo
 
 .PHONY: log rewrite build reset
