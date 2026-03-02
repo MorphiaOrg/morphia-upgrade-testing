@@ -16,6 +16,7 @@ then
   rm -rf docs design
   git rm -rfq src/main/java
   find . -name "*.json" | xargs rm
+  sed -i"" 's/new Mapper(mapper)/mapper.copy()/g' src/test/java/dev/morphia/test/mapping/TestMapper.java
   cp ../core-pom.xml pom.xml
 fi
 

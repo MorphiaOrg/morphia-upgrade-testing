@@ -1,6 +1,6 @@
-MORPHIA_CURRENT=2.5.1
+MORPHIA_CURRENT=2.5.2
 MORPHIA_M2=$(HOME)/.m2/repository/dev/morphia/morphia
-MORPHIA_HOME?=$(HOME)/dev/morphia.dev/morphia
+MORPHIA_HOME?=$(if $(wildcard $(HOME)/dev/morphia.dev/morphia),$(HOME)/dev/morphia.dev/morphia,git@github.com:MorphiaOrg/morphia.git)
 
 MORPHIA_JAR=$(MORPHIA_M2)/morphia-core/3.0.0-SNAPSHOT/morphia-core-3.0.0-SNAPSHOT.jar
 REWRITE_JAR=$(MORPHIA_M2)/morphia-rewrite/3.0.0-SNAPSHOT/morphia-rewrite-3.0.0-SNAPSHOT.jar
@@ -11,6 +11,7 @@ $(info HOME=$(HOME))
 $(info MORPHIA_HOME=$(MORPHIA_HOME))
 
 all: morphia javabot
+
 
 morphia:
 	@PROJECT=$@ $(MAKE) upgrade
